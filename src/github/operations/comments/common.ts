@@ -25,7 +25,7 @@ export function createCommentBody(
   jobRunLink: string,
   branchLink: string = "",
 ): string {
-  return `Claude Code is working… ${SPINNER_HTML}
+  return `Wakumo AI is working… ${SPINNER_HTML}
 
 I'll analyze this and get back to you.
 
