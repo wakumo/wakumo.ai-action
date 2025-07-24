@@ -105,8 +105,7 @@ async function run() {
     const conversation = await client.conversation.create(prompt);
 
     // Compose the comment message
-    const conversationLink = `https://app.wakumo.ai/conversation/${conversation.id}`;
-    const message = `Wakumo AI conversation created: ${conversationLink}`;
+    const message = `This issue is being processed by Wakumo AI.\nConversation ID: ${conversation.id}\nVisit the Wakumo AI app for more details.`;
 
     // Post a comment back to the issue/PR
     await octokit.rest.issues.createComment({
