@@ -5,8 +5,11 @@ import { prepareIssuePrompt } from "../create-prompts/index";
 
 async function run() {
   try {
-    const apiKey = core.getInput("WKM_API_KEY", { required: true });
-    const apiUrl = core.getInput("WKM_API_URL");
+    const apiKey = process.env.WKM_API_KEY;
+    if (!apiKey) {
+      throw new Error("WKM_API_KEY is required");
+    }
+    const apiUrl = process.env.WAKUMO_API_URL;
     const context = github.context;
     const payload = context.payload;
     const octokit = github.getOctokit(process.env.GITHUB_TOKEN!);
@@ -69,7 +72,7 @@ async function run() {
       triggerComment = payload.comment.body;
     }
 
-    // Read system_prompt and append_system_prompt from environment
+    // Read system_prompt and append_system_prompt from environment variables
     const systemPrompt = process.env.SYSTEM_PROMPT || "";
     const appendSystemPrompt = process.env.APPEND_SYSTEM_PROMPT || "";
 
