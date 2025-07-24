@@ -35,6 +35,12 @@ jobs:
         id: wakumo-ai
         uses: wakumo/wakumo-ai-action@beta
         with:
-          WKM_API_KEY: ${{ secrets.WKM_API_KEY }}
+          wkm_api_key: ${{ secrets.WKM_API_KEY }}
           # Optional: override the Wakumo AI API endpoint (e.g. for staging or self-hosted)
-          # WKM_API_URL: "https://api.staging.wakumo.ai"
+          # wkm_api_url: "https://api.staging.wakumo.ai"
+          # Optional: override the entire prompt (replaces all default context)
+          # system_prompt: |
+          #   You are a strict code reviewer. Only answer in Vietnamese.
+          # Optional: append extra instructions to the default prompt
+          # append_system_prompt: |
+          #   Always check for security issues in authentication code.
