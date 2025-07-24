@@ -14,7 +14,11 @@ async function run() {
     const repo = context.repo.repo;
 
     // Check for @wakumo-ai in comment, issue body, or review body
-    const body = payload.comment?.body || payload.issue?.body || payload.review?.body || "";
+    const body =
+      payload.comment?.body ||
+      payload.issue?.body ||
+      payload.review?.body ||
+      "";
     const title = payload.issue?.title || "";
     if (!body.includes("@wakumo-ai") && !title.includes("@wakumo-ai")) {
       console.log("No @wakumo-ai tag found. Exiting.");
@@ -22,9 +26,17 @@ async function run() {
     }
 
     // If this is an issue event, fetch all comments (excluding bot comments)
-    let allUserComments: Array<{ user: string; body: string; created_at: string }> = [];
-    let issueNumber = payload.issue?.number || payload.pull_request?.number || 0;
-    let author = payload.issue?.user?.login || payload.pull_request?.user?.login || "unknown";
+    let allUserComments: Array<{
+      user: string;
+      body: string;
+      created_at: string;
+    }> = [];
+    let issueNumber =
+      payload.issue?.number || payload.pull_request?.number || 0;
+    let author =
+      payload.issue?.user?.login ||
+      payload.pull_request?.user?.login ||
+      "unknown";
     if (payload.issue) {
       const commentsResp = await octokit.rest.issues.listComments({
         owner,
@@ -33,13 +45,18 @@ async function run() {
         per_page: 100,
       });
       // Log all comment user logins for debugging
-      console.log("All comment user logins:", commentsResp.data.map(c => c.user?.login));
+      console.log(
+        "All comment user logins:",
+        commentsResp.data.map((c) => c.user?.login),
+      );
       allUserComments = commentsResp.data
-        .filter(c => {
+        .filter((c) => {
           const login = c.user?.login || "";
-          return !login.includes("wakumo-ai[bot]") && !login.includes("wakumo-ai");
+          return (
+            !login.includes("wakumo-ai[bot]") && !login.includes("wakumo-ai")
+          );
         })
-        .map(c => ({
+        .map((c) => ({
           user: c.user?.login || "unknown",
           body: c.body || "",
           created_at: c.created_at || "",
@@ -57,19 +74,22 @@ async function run() {
     const appendSystemPrompt = process.env.APPEND_SYSTEM_PROMPT || "";
 
     // Build the prompt using the new options logic
-    const prompt = prepareIssuePrompt({
-      title,
-      body: payload.issue?.body || "",
-      issueNumber,
-      author,
-      repo,
-      owner,
-      comments: allUserComments,
-      triggerComment,
-    }, {
-      systemPrompt,
-      appendSystemPrompt,
-    });
+    const prompt = prepareIssuePrompt(
+      {
+        title,
+        body: payload.issue?.body || "",
+        issueNumber,
+        author,
+        repo,
+        owner,
+        comments: allUserComments,
+        triggerComment,
+      },
+      {
+        systemPrompt,
+        appendSystemPrompt,
+      },
+    );
 
     // Create WakumoAIClient
     const initParams: { apiKey: string; apiUrl?: string } = { apiKey };

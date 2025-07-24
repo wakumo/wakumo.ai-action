@@ -19,20 +19,27 @@ export interface IssuePromptParams {
 
 export function prepareIssuePrompt(
   params: IssuePromptParams,
-  options?: { systemPrompt?: string; appendSystemPrompt?: string }
+  options?: { systemPrompt?: string; appendSystemPrompt?: string },
 ): string {
   // If systemPrompt is set, use it as the full prompt
   if (options?.systemPrompt && options.systemPrompt.trim() !== "") {
     return options.systemPrompt;
   }
 
-  const { title, body, issueNumber, author, repo, owner, comments, triggerComment } = params;
+  const {
+    title,
+    body,
+    issueNumber,
+    author,
+    repo,
+    owner,
+    comments,
+    triggerComment,
+  } = params;
 
   const formattedComments = comments.length
     ? comments
-        .map(
-          (c) => `- [${c.user} at ${c.created_at}]:\n${c.body}`
-        )
+        .map((c) => `- [${c.user} at ${c.created_at}]:\n${c.body}`)
         .join("\n\n")
     : "No comments";
 
