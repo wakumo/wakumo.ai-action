@@ -5,8 +5,11 @@ import { prepareIssuePrompt } from "../create-prompts/index";
 
 async function run() {
   try {
-    const apiKey = core.getInput("wkm_api_key", { required: true });
-    const apiUrl = core.getInput("wkm_api_url");
+    const apiKey = process.env.WKM_API_KEY;
+    if (!apiKey) {
+      throw new Error("WKM_API_KEY is required");
+    }
+    const apiUrl = process.env.WAKUMO_API_URL;
     const context = github.context;
     const payload = context.payload;
     const octokit = github.getOctokit(process.env.GITHUB_TOKEN!);
@@ -69,9 +72,9 @@ async function run() {
       triggerComment = payload.comment.body;
     }
 
-    // Read system_prompt and append_system_prompt from input
-    const systemPrompt = core.getInput("system_prompt");
-    const appendSystemPrompt = core.getInput("append_system_prompt");
+    // Read system_prompt and append_system_prompt from environment variables
+    const systemPrompt = process.env.SYSTEM_PROMPT || "";
+    const appendSystemPrompt = process.env.APPEND_SYSTEM_PROMPT || "";
 
     // Build the prompt using the new options logic
     const prompt = prepareIssuePrompt(
