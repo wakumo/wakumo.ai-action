@@ -11,7 +11,7 @@
         "@octokit/rest": "^21.1.1",
         "@octokit/webhooks-types": "^7.6.1",
         "node-fetch": "^3.3.2",
-        "wakumo-ai-sdk-js": "^0.1.0",
+        "wakumo-ai-sdk-js": "^0.1.2",
         "zod": "^3.24.4",
       },
       "devDependencies": {
@@ -294,7 +294,7 @@
 
     "vary": ["vary@1.1.2", "", {}, "sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg=="],
 
-    "wakumo-ai-sdk-js": ["wakumo-ai-sdk-js@0.1.0", "", { "dependencies": { "axios": "^1.6.8", "ws": "^8.16.0", "yargs": "^17.7.2" }, "bin": { "wakumo-ai": "dist/cli.js" } }, "sha512-ouuxSwbwc0z483qr0KmLa9heYUMU6dR0S+i/GdJ8GhVArBJ9NIu/LGMz4vzgqC/kKw8Gr9f7D7uMV9p9QZpEAA=="],
+    "wakumo-ai-sdk-js": ["wakumo-ai-sdk-js@0.1.2", "", { "dependencies": { "axios": "^1.6.8", "ws": "^8.16.0", "yargs": "^17.7.2" }, "bin": { "wakumo-ai": "dist/cli.js" } }, "sha512-MQE0MRsOYs9egaMWuhKDkbCgnjT95aCev37Pz/oXcE1ldULsH3Z8HY/Sjsg+mbCIOu71xEpaTj8aHyTt7qg9NQ=="],
 
     "web-streams-polyfill": ["web-streams-polyfill@3.3.3", "", {}, "sha512-d2JWLCivmZYTSIoge9MsgFCZrt571BikcWGYkjC1khllbTeDlGqZ2D8vD8E/lJa8WGWbb7Plm8/XJYV7IJHZZw=="],
 
