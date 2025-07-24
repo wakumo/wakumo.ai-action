@@ -5,10 +5,10 @@ branding:
   color: "orange"
 
 inputs:
-  WKM_API_KEY:
+  wkm_api_key:
     description: "Wakumo AI API Key"
     required: true
-  WKM_API_URL:
+  wkm_api_url:
     description: "(Optional) Wakumo AI API URL override."
     required: false
   system_prompt:
@@ -30,8 +30,8 @@ runs:
       shell: bash
       run: bun run ${GITHUB_ACTION_PATH}/src/entrypoints/index.ts
       env:
-        WKM_API_KEY: ${{ inputs.WKM_API_KEY }}
-        WAKUMO_API_URL: ${{ inputs.WKM_API_URL }}
+        WKM_API_KEY: ${{ inputs.wkm_api_key }}
+        WAKUMO_API_URL: ${{ inputs.wkm_api_url }}
         SYSTEM_PROMPT: ${{ inputs.system_prompt }}
         APPEND_SYSTEM_PROMPT: ${{ inputs.append_system_prompt }}
         GITHUB_TOKEN: ${{ github.token }}
