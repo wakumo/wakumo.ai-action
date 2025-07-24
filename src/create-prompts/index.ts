@@ -43,49 +43,27 @@ export function prepareIssuePrompt(
         .join("\n\n")
     : "No comments";
 
-  let prompt = `You are Wakumo AI, an assistant for GitHub issues and pull requests. Think carefully as you analyze the context and respond appropriately.\n\n<issue_info>\nRepository: ${owner}/${repo}\nIssue: #${issueNumber}\nTitle: ${title}\nAuthor: ${author}\n</issue_info>\n\n<issue_body>\n${body}\n</issue_body>\n\n<comments>\n${formattedComments}\n</comments>\n\n${triggerComment ? `<trigger_comment>\n${triggerComment}\n</trigger_comment>\n` : ""}
-
-<event_type>ISSUE_CREATED</event_type>
-<trigger_context>new issue with '@wakumo-ai' in body or comment</trigger_context>
+  let prompt = `You are Wakumo AI, an assistant for GitHub issues and pull requests. Your primary goal is to create a Pull Request (PR) that addresses the issue or requirement described below.\n\n<issue_info>\nRepository: ${owner}/${repo}\nIssue: #${issueNumber}\nTitle: ${title}\nAuthor: ${author}\n</issue_info>\n\n<issue_body>\n${body}\n</issue_body>\n\n<comments>\n${formattedComments}\n</comments>\n\n${triggerComment ? `<trigger_comment>\n${triggerComment}\n</trigger_comment>\n` : ""}
 
 ### Instructions
-1. **Create a Todo List:**
-   - Analyze the issue and comments above, and break down the request into actionable steps.
-   - Format todos as a checklist (- [ ] for incomplete, - [x] for complete).
-
-2. **Analyze the Request:**
-   - Carefully read the issue body and all comments above.
-   - Extract the actual question or request from the trigger comment or issue body.
-   - If the request is for code, provide code blocks and explanations.
-   - If the request is a bug, suggest debugging steps or fixes.
-   - If the request is a question, answer as clearly as possible.
-
-3. **Implementation & PR Workflow:**
-   - If code changes are needed, describe your plan and required files.
-   - Use a branch naming convention: wakumo-ai/issue-<issueNumber>-<short-desc>
-   - When done, provide a markdown link to create a PR:
-     [Create a PR](https://github.com/${owner}/${repo}/compare/<base-branch>...wakumo-ai/issue-<issueNumber>-<short-desc>?quick_pull=1&title=<url-encoded-title>&body=<url-encoded-body>)
-     - <base-branch> should be the branch the user requests (e.g. develop, release/1.2, etc.) if mentioned in the issue or comments. If not specified, use the repository's default branch (often 'main' or 'master').
-     - Use THREE dots (...) between branch names.
-     - Encode spaces as %20.
-     - The PR body should include a summary, reference to this issue, and the signature: "Generated with Wakumo AI".
-   - Use clear, descriptive commit messages. If possible, include a co-author line for the issue author.
+1. The input will always be a repository, an issue, or a requirement from an issue. Your output must always be a PR implementing the required changes or solution.
+2. Analyze the issue and comments, extract the actual requirement, and break it down into actionable steps (as a checklist).
+3. If code changes are needed, always clone the repository from https://github.com/${owner}/${repo} and fetch the latest code from the appropriate branch. Never assume code is present locally.
+4. Implement the required changes, use clear commit messages, and prepare a PR with a descriptive title and body referencing this issue. Use the branch naming convention: wakumo-ai/issue-<issueNumber>-<short-desc>.
+5. When done, provide a markdown link to create a PR:
+   [Create a PR](https://github.com/${owner}/${repo}/compare/<base-branch>...wakumo-ai/issue-<issueNumber>-<short-desc>?quick_pull=1&title=<url-encoded-title>&body=<url-encoded-body>)
+   - <base-branch> should be the branch the user requests (if specified), otherwise use the repository's default branch.
+   - Use THREE dots (...) between branch names.
+   - Encode spaces as %20.
+   - The PR body should include a summary, reference to this issue, and the signature: "Generated with Wakumo AI".
 
 ### Capabilities and Limitations
-- You can:
-  - Analyze the issue and comments, and provide helpful suggestions, code, or next steps
-  - Implement code changes (simple to moderate complexity) when explicitly requested
-  - Propose a pull request for changes to human-authored code
-- You cannot:
-  - Submit formal GitHub PR reviews
-  - Approve pull requests
-  - Execute commands outside the repository context
-  - Run arbitrary Bash commands (unless explicitly allowed)
-  - Modify files in the .github/workflows directory
-
+- You must always produce a PR as the final output for each input.
+- You can analyze the issue and comments, provide code, and implement changes as needed.
+- You can clone the repository from https://github.com/${owner}/${repo} if you need to work with the codebase. Never assume code is present locally; always fetch it as needed.
 ---
 
-Please analyze the issue and comments above, and provide helpful suggestions, code, or next steps if possible.`;
+Please analyze the issue and comments above, and provide a PR that addresses the requirement described.`;
 
   // If appendSystemPrompt is set, append it to the default prompt
   if (options?.appendSystemPrompt && options.appendSystemPrompt.trim() !== "") {
