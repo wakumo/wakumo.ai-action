@@ -112,11 +112,11 @@ async function run() {
 
     const originContext = {
       source: {
-        name: 'github',
+        name: "github",
         org: owner,
         resource: repo,
       },
-      type: payload.issue ? 'issue_comment' : 'pull_request_comment',
+      type: payload.issue ? "issue_comment" : "pull_request_comment",
       id: issueNumber.toString(),
       sub_id: commentId.toString(),
     };
@@ -124,7 +124,7 @@ async function run() {
       prompt,
       [],
       [],
-      originContext
+      originContext,
     );
 
     const updatedMessage = `This issue is being processed by Wakumo AI.\nConversation ID: ${conversation.id}\nVisit the Wakumo AI app for more details.`;
