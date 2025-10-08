@@ -101,18 +101,38 @@ async function run() {
     }
     const client = new WakumoAIClient(initParams);
 
-    // Create a conversation with the final prompt
-    const conversation = await client.conversation.create(prompt);
-
-    // Compose the comment message
-    const message = `This issue is being processed by Wakumo AI.\nConversation ID: ${conversation.id}\nVisit the Wakumo AI app for more details.`;
-
-    // Post a comment back to the issue/PR
-    await octokit.rest.issues.createComment({
+    const initialMessage = `This issue is being processed by Wakumo AI.\nConversation will be created shortly.`;
+    const commentResp = await octokit.rest.issues.createComment({
       owner,
       repo,
       issue_number: issueNumber,
-      body: message,
+      body: initialMessage,
+    });
+    const commentId = commentResp.data.id;
+
+    const originContext = {
+      source: {
+        name: "github",
+        org: owner,
+        resource: repo,
+      },
+      type: payload.issue ? "issue_comment" : "pull_request_comment",
+      id: issueNumber.toString(),
+      sub_id: commentId.toString(),
+    };
+    const conversation = await client.conversation.create(
+      prompt,
+      [],
+      [],
+      originContext,
+    );
+
+    const updatedMessage = `This issue is being processed by Wakumo AI.\nConversation ID: ${conversation.id}\nVisit the Wakumo AI app for more details.`;
+    await octokit.rest.issues.updateComment({
+      owner,
+      repo,
+      comment_id: commentId,
+      body: updatedMessage,
     });
   } catch (error) {
     core.setFailed(`Action failed: ${error}`);
